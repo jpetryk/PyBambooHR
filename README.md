@@ -1,10 +1,12 @@
 # PyBambooHR
 
-[![Build Status](https://secure.travis-ci.org/smeggingsmegger/PyBambooHR.png)](https://travis-ci.org/smeggingsmegger/PyBambooHR)&nbsp;&nbsp;&nbsp;![Download Stats](https://pypip.in/download/PyBambooHR/badge.svg)
+This is a forked version of the unofficial Python API for Bamboo HR that is compatible with Google App Engine (GAE). So far it is focusing on managing employee information but you can pretty much do anything you want with a little python.
 
-This is an unofficial Python API for Bamboo HR. So far it is focusing on managing employee information but you can pretty much do anything you want with a little python.
+~~The library makes use of the [requests](http://docs.python-requests.org/en/latest/) library for Python and [HTTPretty](https://github.com/gabrielfalcao/HTTPretty) for testing. A huge thank you to both of those excellent projects.~~
 
-The library makes use of the [requests](http://docs.python-requests.org/en/latest/) library for Python and [HTTPretty](https://github.com/gabrielfalcao/HTTPretty) for testing. A huge thank you to both of those excellent projects.
+This forked version of the package requires using a downgraded version of requests (0.13.2) so it does not conflict with Google App Engine. Instead, it uses GAE's urlfetch(https://cloud.google.com/appengine/docs/python/urlfetch/).
+
+To run the tests, you are required to update the tests/settings.py or create a tests/local\_settings.py file (better idea) with the GAE\_PATH setting.
 
 Using this library is very simple:
 

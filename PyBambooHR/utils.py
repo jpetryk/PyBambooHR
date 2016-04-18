@@ -6,6 +6,9 @@ import datetime
 import re
 import xmltodict
 
+from requests import HTTPError
+from google.appengine.api import urlfetch
+
 def camelcase_keys(data):
     """
     Converts all the keys in a dict to camelcase. It works recursively to convert any nested dicts as well.
@@ -183,3 +186,29 @@ def escape(to_escape):
     for char, repl in XML_ESCAPES:
         to_escape = to_escape.replace(char, repl)
     return to_escape
+
+
+def urlfetch_gae(url, payload=None, method=1, headers={}, allow_truncated=False, follow_redirects=True, deadline=None, validate_certificate=None):
+    """Uses GAE's urlfetch in order to fetch a URL. For method arg, use urlfetch.GET, urlfetch.POST, etc."""
+    http_error_msg = None
+    try:
+        response = urlfetch.fetch(url=url, payload=payload, method=method, headers=headers,
+                                  allow_truncated=allow_truncated, follow_redirects=follow_redirects,
+                                  deadline=deadline, validate_certificate=validate_certificate)
+
+        if 400 <= response.status_code < 500:
+            http_error_msg = '%s Client Error for url: %s' % (response.status_code, url)
+
+        elif 500 <= response.status_code < 600:
+            http_error_msg = '%s Server Error for url: %s' % (response.status_code, url)
+
+    except urlfetch.InvalidURLError:
+        http_error_msg =  "URL is an empty string or obviously invalid"
+
+    except urlfetch.DownloadError:
+        http_error_msg = "Server cannot be contacted"
+
+    if http_error_msg:
+        raise HTTPError(http_error_msg)
+        
+    return response
