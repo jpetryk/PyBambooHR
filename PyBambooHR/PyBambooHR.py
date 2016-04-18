@@ -71,9 +71,7 @@ class PyBambooHR(object):
         # You must create an API key through the BambooHR interface
         self.api_key = api_key
         
-        #######
         self.headers.update({'Authorization': "Basic %s:x" % base64.b64encode(self.api_key)})
-        #######
 
         # Some people will want to use underscore keys for employee data...
         self.underscore_keys = underscore_keys
@@ -235,8 +233,6 @@ class PyBambooHR(object):
         xml = self._format_employee_xml(employee)
         url = self.base_url + 'employees/'
         
-        #r = requests.post(url, data=xml, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
         
         return {'url': r.headers['location'], 'id': r.headers['location'].replace(url, "")}
@@ -254,8 +250,6 @@ class PyBambooHR(object):
         xml = self._format_employee_xml(employee)
         url = self.base_url + 'employees/{0}'.format(id)
         
-        #r = requests.post(url, data=xml, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
         
         return True
@@ -269,9 +263,6 @@ class PyBambooHR(object):
         """
         url = self.base_url + 'employees/directory'
         
-        #r = requests.get(url, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
-        #data = r.json()
         r = utils.urlfetch_gae(url=url, method=urlfetch.GET, headers=self.headers)
         data = json.loads(r.content)
         
@@ -309,9 +300,6 @@ class PyBambooHR(object):
         }
 
         url = self.base_url + "employees/{0}".format(employee_id)
-        #r = requests.get(url, headers=self.headers, params=payload, auth=(self.api_key, ''))
-        #r.raise_for_status()
-        #employee = r.json()
         r = utils.urlfetch_gae(url=url, payload=payload, method=urlfetch.GET, headers=self.headers)
         employee = json.loads(r.content)
 
@@ -332,8 +320,7 @@ class PyBambooHR(object):
         url = self.base_url + "employees/{0}/photo".format(employee_id)
         if photo_size:
             url = url + "/{}".format(photo_size)
-        #r = requests.get(url, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
+            
         r = utils.urlfetch_gae(url=url, method=urlfetch.GET, headers=self.headers)
 
         return r.content, r.headers.get('content-type', '')
@@ -358,8 +345,6 @@ class PyBambooHR(object):
                       "share": (None, "yes" if share else "no")}
 
             url = self.base_url + "employees/{0}/files/".format(employee_id)
-            #r = requests.post(url, headers=self.headers, auth=(self.api_key, ''), files=params)
-            #r.raise_for_status()
             r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
         return True
 
@@ -376,8 +361,6 @@ class PyBambooHR(object):
         xml = self._format_row_xml(row)
         url = self.base_url + \
             "employees/{0}/tables/{1}/".format(employee_id, table_name)
-        #r = requests.post(url, data=xml, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
         
         return True
@@ -396,8 +379,6 @@ class PyBambooHR(object):
         xml = self._format_row_xml(row)
         url = self.base_url + \
             "employees/{0}/tables/{1}/{2}/".format(employee_id, table_name, row_id)
-        #r = requests.post(url, data=xml, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
         
         return True
@@ -421,17 +402,13 @@ class PyBambooHR(object):
 
         filter_duplicates = 'yes' if filter_duplicates else 'no'
         url = self.base_url + "reports/{0}?format={1}&fd={2}".format(report_id, report_format, filter_duplicates)
-        #r = requests.get(url, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, method=urlfetch.GET, headers=self.headers)
         
         if report_format == 'json':
             # return list/dict for json type
-            #result = r.json()
             result = json.loads(r.content)
         elif report_format in ('csv', 'xml'):
             # return text for csv type
-            #result = r.text
             result = r.content
         else:
             # return requests object for everything else after saving the file to the location specified.
@@ -476,17 +453,13 @@ class PyBambooHR(object):
 
         xml = self._format_report_xml(get_fields, title=title, report_format=report_format)
         url = self.base_url + "reports/custom/?format={0}".format(report_format)
-        #r = requests.post(url, data=xml, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
         
         if report_format == 'json':
             # return list/dict for json type
-            #result = r.json()
             result = json.loads(r.content)
         elif report_format in ('csv', 'xml'):
             # return text for csv type
-            #result = r.text
             result = r.content
         else:
             # return requests object for everything else after saving the file to the location specified.
@@ -510,8 +483,6 @@ class PyBambooHR(object):
         the values of the table's fields for a particular date, which is stored by key 'date' in the dictionary.
         """
         url = self.base_url + 'employees/{}/tables/{}'.format(employee_id, table_name)
-        #r = requests.get(url, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, method=urlfetch.GET, headers=self.headers)
         
         return utils.transform_tabular_data(r.content)
@@ -528,8 +499,6 @@ class PyBambooHR(object):
 
         url = self.base_url + 'employees/changed/'
         params = {'since': since.strftime('%Y-%m-%dT%H:%M:%SZ')}
-        #r = requests.get(url, params=params, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=params, method=urlfetch.GET, headers=self.headers)
 
         return utils.transform_change_list(r.content)
@@ -544,9 +513,6 @@ class PyBambooHR(object):
             params['start'] = start_date
         if end_date:
             params['end'] = end_date
-        #r = requests.get(url, params=params, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
-        #return r.json()
         r = utils.urlfetch_gae(url=url, payload=params, method=urlfetch.GET, headers=self.headers)
         return json.loads(r.content)
         
@@ -569,18 +535,14 @@ class PyBambooHR(object):
             params['employeeId'] = employee_id
 
         r = self._query('time_off/requests', params, raw=True)
-        #return r.json()
         return json.loads(r.content)
         
         # return utils.transform_time_off(r.content)
 
     def _query(self, url, params, raw=False):
         url = self.base_url + url
-        #r = requests.get(url, params=params, headers=self.headers, auth=(self.api_key, ''))
-        #r.raise_for_status()
         r = utils.urlfetch_gae(url=url, payload=params, method=urlfetch.GET, headers=self.headers)
         if raw:
             return r
         else:
-            #return r.json()
             return json.loads(r.content)

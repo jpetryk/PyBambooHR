@@ -189,6 +189,7 @@ def escape(to_escape):
 
 
 def urlfetch_gae(url, payload=None, method=1, headers={}, allow_truncated=False, follow_redirects=True, deadline=None, validate_certificate=None):
+    """Uses GAE's urlfetch in order to fetch a URL. For method arg, use urlfetch.GET, urlfetch.POST, etc."""
     http_error_msg = None
     try:
         response = urlfetch.fetch(url=url, payload=payload, method=method, headers=headers,
