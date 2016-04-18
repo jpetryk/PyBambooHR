@@ -71,7 +71,7 @@ class PyBambooHR(object):
         # You must create an API key through the BambooHR interface
         self.api_key = api_key
         
-        self.headers.update({'Authorization': "Basic %s:x" % base64.b64encode(self.api_key)})
+        self.headers.update({'Authorization': "Basic %s" % base64.b64encode(self.api_key+':x')})
 
         # Some people will want to use underscore keys for employee data...
         self.underscore_keys = underscore_keys
