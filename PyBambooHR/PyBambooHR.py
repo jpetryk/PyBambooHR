@@ -345,7 +345,7 @@ class PyBambooHR(object):
                       "share": (None, "yes" if share else "no")}
 
             url = self.base_url + "employees/{0}/files/".format(employee_id)
-            r = utils.urlfetch_gae(url=url, payload=xml, method=urlfetch.POST, headers=self.headers)
+            r = utils.urlfetch_gae(url=url, payload=params, method=urlfetch.POST, headers=self.headers)
         return True
 
     def add_row(self, table_name, employee_id, row):
