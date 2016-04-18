@@ -19,6 +19,12 @@ from requests import HTTPError
 # Force parent directory onto path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Insert GAE
+import settings
+sys.path.insert(0, settings.GAE_PATH)
+sys.path.insert(0, settings.GAE_PATH+'/lib/yaml/lib')
+from google.appengine.ext import testbed
+
 from PyBambooHR import PyBambooHR
 
 class test_employees(unittest.TestCase):
@@ -29,6 +35,10 @@ class test_employees(unittest.TestCase):
     bamboo_u = None
 
     def setUp(self):
+        self.testbed = testbed.Testbed()
+        self.testbed.activate()
+        self.testbed.init_urlfetch_stub()
+        
         if self.bamboo is None:
             self.bamboo = PyBambooHR(subdomain='test', api_key='testingnotrealapikey')
 

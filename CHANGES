@@ -1,5 +1,9 @@
 CHANGES
 =======
+Version 0.5.0 - 18 April 2016
+  * Convert to use Google App Engine's (GAE) urlfetch instead of latest requests
+    library. Requires reverting to requests version 0.13.2 for GAE compatibility.
+
 Version 0.4.2 - 03 October 2014
 
   * Added row_id to row dictionary to keep track of them in case we need them.

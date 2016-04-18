@@ -15,6 +15,10 @@ import unittest
 # Force parent directory onto path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Insert GAE
+import settings
+sys.path.insert(0, settings.GAE_PATH)
+
 from PyBambooHR import PyBambooHR, utils
 
 

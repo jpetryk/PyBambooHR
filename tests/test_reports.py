@@ -18,6 +18,12 @@ from json import dumps
 # Force parent directory onto path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Insert GAE
+import settings
+sys.path.insert(0, settings.GAE_PATH)
+sys.path.insert(0, settings.GAE_PATH+'/lib/yaml/lib')
+from google.appengine.ext import testbed
+
 from PyBambooHR import PyBambooHR
 
 class test_reports(unittest.TestCase):
@@ -31,6 +37,10 @@ class test_reports(unittest.TestCase):
     body = None
 
     def setUp(self):
+        self.testbed = testbed.Testbed()
+        self.testbed.activate()
+        self.testbed.init_urlfetch_stub()
+        
         if self.body is None:
             self.body = dumps({"title":"Template","fields":[{"id":"fullName2","type":"text","name":"Last Name, First Name"},{"id":"employeeNumber","type":"employee_number","name":"Employee #"},{"id":"hireDate","type":"date","name":"Hire date"}],"employees":[{"id":"123","fullName2":"Person, Test","employeeNumber":"00001","hireDate":"2010-12-15"},{"id":"124","fullName2":"Guy, Someother","employeeNumber":"00002","hireDate":"2008-10-13"},{"id":"125","fullName2":"Here, Someone","employeeNumber":"00003","hireDate":"2011-03-04"}]})
 
