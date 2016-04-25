@@ -193,12 +193,9 @@ def urlfetch_gae(url, payload=None, method=1, headers={}, allow_truncated=False,
     """Uses GAE's urlfetch in order to fetch a URL. For method arg, use urlfetch.GET, urlfetch.POST, etc."""
     http_error_msg = None
     try:
-        if payload:
-            # BambooHR wants it in the URL
-            try:
-                url = url+'?'+urllib.urlencode(payload)
-            except TypeError:
-                pass
+        if payload and method == urlfetch.GET:
+            payload = urllib.urlencode(payload)
+            url = url+'?'+payload
         
         response = urlfetch.fetch(url=url, payload=payload, method=method, headers=headers,
                                   allow_truncated=allow_truncated, follow_redirects=follow_redirects,
